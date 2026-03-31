@@ -133,6 +133,33 @@ bun cli.js --model anthropic.claude-3-5-sonnet-20241022-v2:0
 
 ---
 
+## 修改源码后如何验证
+
+仓库中已包含编译好的 `cli.js`，可以直接 `bun cli.js` 运行，**不需要重新编译**。
+
+如果你修改了源码想验证效果，流程如下：
+
+```bash
+# 1. 修改源码（src/ 目录下的任意文件）
+
+# 2. 重新编译
+bun run build
+
+# 3. 运行验证
+bun cli.js
+```
+
+**注意**：以下模块涉及 Anthropic 内部私有包，修改后无法编译：
+
+- `src/utils/claudeInChrome/` — Chrome 集成
+- `src/utils/sandbox/` — 沙箱模式
+- `src/skills/bundled/claudeInChrome.ts`
+- `src/utils/plugins/mcpbHandler.ts`
+
+其他绝大部分功能（UI、命令、工具调用、对话逻辑等）均可正常编译验证。
+
+---
+
 ## 常见问题
 
 **Q: 运行后界面卡住？**
